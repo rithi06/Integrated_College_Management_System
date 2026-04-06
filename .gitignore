@@ -1,0 +1,5 @@
+node_modules/
+icms/client/node_modules/
+icms/server/node_modules/
+.env
+dist
