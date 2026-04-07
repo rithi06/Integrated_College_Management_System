@@ -11,13 +11,25 @@ const app  = express();
 const PORT = process.env.PORT || 5000;
 
 // ── Middleware ─────────────────────────────────────────────
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://integrated-college-management-syste.vercel.app',
+  'https://integrated-college-management-system-eix1g64w1.vercel.app'
+];
+
 app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    'https://integrated-college-management-syste.vercel.app'
-  ],
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true); // allow Postman / curl
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 }));
+
+app.options('*', cors()); // 🔥 VERY IMPORTANT for preflight
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
