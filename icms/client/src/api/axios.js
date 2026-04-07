@@ -1,20 +1,20 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:5000/api',   // ✅ FIXED HERE
+  baseURL: `${import.meta.env.VITE_API_URL}/api`,
   headers: { 'Content-Type': 'application/json' },
 });
 
-// Attach JWT token to every request
+// Attach JWT token
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('icms_token');  // make sure this key is correct
+  const token = localStorage.getItem('icms_token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
 });
 
-// On 401/403 redirect to login
+// Handle auth errors
 api.interceptors.response.use(
   (res) => res,
   (err) => {
